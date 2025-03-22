@@ -32,31 +32,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const successMessage = document.createElement('p');
     successMessage.style.color = 'green';
     successMessage.textContent = 'Форма успешно отправлена!';
-    successMessage.style.display = 'none'; // Скрываем сообщение по умолчанию
-    form.parentNode.insertBefore(successMessage, form.nextSibling); // Добавляем сообщение после формы
+    successMessage.style.display = 'none'; /
+    form.parentNode.insertBefore(successMessage, form.nextSibling); 
 
     form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+        event.preventDefault();
 
-        // Отправляем данные формы на сервер с использованием AJAX
-        fetch('process_contact_form.php', { // Замените 'process_contact_form.php' на URL вашего обработчика
+        fetch('process_contact_form.php', { //обработка данных формы не реализована(
             method: 'POST',
-            body: new FormData(form) // Создаем объект FormData из формы
+            body: new FormData(form) 
         })
         .then(response => {
             if (response.ok) {
-                return response.text(); // Или response.json(), если сервер возвращает JSON
+                return response.text(); 
             } else {
                 throw new Error('Ошибка отправки формы.');
             }
         })
         .then(data => {
-            console.log(data); // Выводим ответ от сервера (для отладки)
+            console.log(data); 
 
-            // Показываем сообщение об успехе
             successMessage.style.display = 'block';
 
-            // Скрываем сообщение через некоторое время (например, через 3 секунды)
+            
             setTimeout(function() {
                 successMessage.style.display = 'none';
             }, 3000);

@@ -1,10 +1,9 @@
 <?php
-session_start();
+include 'init.php';
 
-// Подключение к базе данных (убедитесь, что файл db_config.php существует)
 include 'db_config.php';
 
-// Функция для получения информации о товаре из базы данных
+
 function getProductDetails($conn, $productId) {
     $sql = "SELECT id, name, image, price FROM products WHERE id = ?";
     $stmt = $conn->prepare($sql);
@@ -18,9 +17,8 @@ function getProductDetails($conn, $productId) {
     }
 }
 
-// Обработка добавления товара в корзину
 if (isset($_POST['add_to_cart'])) {
-    // var_dump($_POST); //  Удалить или закомментировать эту строку
+  
     $productId = intval($_POST['product_id']);
     $quantity = intval($_POST['quantity']);
 
@@ -42,7 +40,7 @@ if (isset($_POST['add_to_cart'])) {
                 'quantity' => $quantity
             );
         }
-        // var_dump($_SESSION['cart']); // Удалить или закомментировать эту строку
+     
         header('Content-Type: application/json');
         echo json_encode(array('status' => 'success', 'message' => 'Товар добавлен в корзину'));
         exit();
@@ -53,7 +51,7 @@ if (isset($_POST['add_to_cart'])) {
     }
 }
 
-// Обработка изменения количества товара в корзине
+
 if (isset($_POST['update_cart'])) {
     foreach ($_POST['quantity'] as $productId => $quantity) {
         $productId = intval($productId);
@@ -62,7 +60,7 @@ if (isset($_POST['update_cart'])) {
         if ($quantity > 0) {
             $_SESSION['cart'][$productId]['quantity'] = $quantity;
         } else {
-            // Если количество равно 0, удаляем товар из корзины
+      
             unset($_SESSION['cart'][$productId]);
         }
     }
@@ -70,7 +68,7 @@ if (isset($_POST['update_cart'])) {
     exit();
 }
 
-// Обработка удаления товара из корзины
+
 if (isset($_GET['remove'])) {
     $productId = intval($_GET['remove']);
     unset($_SESSION['cart'][$productId]);
@@ -78,7 +76,6 @@ if (isset($_GET['remove'])) {
     exit();
 }
 
-// Функция для расчета общей суммы корзины
 function calculateTotal($cart) {
     $total = 0;
     foreach ($cart as $item) {
@@ -87,13 +84,12 @@ function calculateTotal($cart) {
     return $total;
 }
 
-// Получаем корзину из сессии
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
 
-// Рассчитываем общую сумму
+
 $total = calculateTotal($cart);
 
-// Закрываем соединение с базой данных (если соединение открыто в db_config.php)
+
 if (isset($conn) && $conn) {
     $conn->close();
 }

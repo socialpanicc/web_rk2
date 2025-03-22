@@ -1,8 +1,7 @@
 <?php
-session_start();
+include 'init.php';
 
-// PHP-код для обработки авторизации (если есть)
-// ...
+
 ?>
 
 <!DOCTYPE html>

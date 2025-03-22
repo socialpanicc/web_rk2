@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
 
             const productId = this.dataset.productId;
-            const quantity = 1; // Или получите количество из другого элемента
+            const quantity = 1; 
 
-            console.log('Отправляем POST запрос', productId, quantity); // Проверяем значения
+            console.log('Отправляем POST запрос', productId, quantity); 
 
             fetch('cart.php', {
                 method: 'POST',
@@ -18,36 +18,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: `add_to_cart=1&product_id=${productId}&quantity=${quantity}`,
             })
             .then(response => {
-                console.log('Ответ сервера (response):', response); // Посмотрим на весь response
-
+                console.log('Ответ сервера (response):', response); 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`); // Бросаем ошибку, если status не 200-299
+                    throw new Error(`HTTP error! Status: ${response.status}`); 
                 }
-                return response.json(); // Парсим JSON
+                return response.json(); 
             })
             .then(data => {
-                console.log('JSON данные (data):', data); // Проверяем JSON
+                console.log('JSON данные (data):', data); 
 
                 if (data.status === 'success') {
-                    console.log(data.message); // Сообщение об успехе
+                    console.log(data.message); 
                     alert(data.message);
-                    updateCartWidget(); // Обновляем виджет корзины, если он есть
+                    updateCartWidget(); 
 
                 } else {
-                    console.error('Ошибка от сервера:', data.message); // Сообщение об ошибке от сервера
+                    console.error('Ошибка от сервера:', data.message);
                     alert(data.message);
                 }
             })
             .catch(error => {
-                console.error('Ошибка при запросе (catch):', error); // Ловим ошибки сети, парсинга JSON и т.д.
+                console.error('Ошибка при запросе (catch):', error); 
                 alert('Произошла ошибка при добавлении товара в корзину.  Пожалуйста, попробуйте позже.');
             });
         });
     });
 
-    function updateCartWidget() {
-        //  Функция обновления виджета корзины (реализуйте ее, если нужно)
-        //  Например, отправка запроса к get_cart_data.php и обновление элементов на странице
-        console.log("Обновляем виджет корзины.  Вам нужно реализовать эту функцию.");
-    }
+    
 });

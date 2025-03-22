@@ -1,7 +1,10 @@
 <?php
-// Получаем текущую дату и время
+
+date_default_timezone_set('Europe/Moscow');
+
+
 $currentYear = date("Y");
-$currentTime = date("H:i:s"); // Формат: часы:минуты:секунды
+$currentTime = date("H:i:s"); 
 ?>
 
 <footer>

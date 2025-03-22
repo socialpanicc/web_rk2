@@ -1,31 +1,29 @@
 <?php
-//session_start(); // Начинаем сессию (если она еще не начата)
 
-// Подключение к базе данных (предполагается, что файл db_config.php уже существует)
+
+
 include 'db_config.php';
 
-// Функция для очистки и фильтрации данных
-function sanitizeInput($data) {
-    $data = trim($data);          // Убираем пробелы в начале и конце
-    $data = stripslashes($data);  // Удаляем экранирование слешей
-    $data = htmlspecialchars($data); // Преобразуем специальные символы в HTML-сущности
+
+function sanitizeInput($data) { 
+    $data = stripslashes($data);  
+    $data = htmlspecialchars($data); 
     return $data;
 }
 
-// Переменные для хранения сообщений об ошибках
 $usernameError = $passwordError = $emailError = "";
 $registrationSuccess = false;
 
-// Обработка данных формы при отправке
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Получаем и фильтруем данные
+
     $username = sanitizeInput($_POST["username"]);
     $password = $_POST["password"];
     $email = sanitizeInput($_POST["email"]);
-    $firstName = sanitizeInput($_POST["first_name"]); // Добавлено
-    $lastName = sanitizeInput($_POST["last_name"]);   // Добавлено
+    $firstName = sanitizeInput($_POST["first_name"]);
+    $lastName = sanitizeInput($_POST["last_name"]);   
 
-    // Валидация данных (простая)
+
     if (empty($username)) {
         $usernameError = "Пожалуйста, введите имя пользователя.";
     }
@@ -38,42 +36,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $emailError = "Неверный формат адреса электронной почты.";
     }
 
-    // Если нет ошибок валидации, регистрируем пользователя
+ 
     if (empty($usernameError) && empty($passwordError) && empty($emailError)) {
-        // Хэшируем пароль
+       
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Подготавливаем SQL-запрос для предотвращения SQL-инъекций
         $sql = "INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
 
-        // Проверяем, удалось ли подготовить запрос
         if ($stmt) {
-            // Привязываем параметры к запросу
+           
             $stmt->bind_param("sssss", $username, $hashedPassword, $email, $firstName, $lastName);
 
-            // Выполняем запрос
+         
             if ($stmt->execute()) {
-                // Регистрация прошла успешно
+              
                 $registrationSuccess = true;
-                // Опционально: автоматический вход после регистрации
-                //$_SESSION['username'] = $username;
-                //header("Location: index.php"); // Перенаправляем на главную страницу
-                //exit();
+                
             } else {
-                // Ошибка при выполнении запроса (например, дублирование имени пользователя или email)
+              
                 $registrationError = "Ошибка при регистрации. Возможно, имя пользователя или email уже заняты.";
             }
 
-            // Закрываем запрос
+        
             $stmt->close();
         } else {
-            $registrationError = "Ошибка при подготовке запроса."; // Ошибка при подготовке запроса
+            $registrationError = "Ошибка при подготовке запроса."; 
         }
     }
 }
 
-// Закрываем соединение с базой данных (если соединение открыто в db_config.php)
 if (isset($conn) && $conn) {
   $conn->close();
 }
@@ -85,8 +77,8 @@ if (isset($conn) && $conn) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="css/style.css"> <!-- Подключаем таблицу стилей -->
-    <?php include 'header.php'; ?>  <!-- Подключаем header -->
+    <link rel="stylesheet" href="css/style.css">
+    <?php include 'header.php'; ?> 
 </head>
 <body>
     <div class="container">
@@ -137,6 +129,6 @@ if (isset($conn) && $conn) {
         <p>Уже зарегистрированы? <a href="login.php">Войти</a></p>
     </div>
 
-    <?php include 'footer.php'; ?>   <!-- Подключаем footer -->
+    <?php include 'footer.php'; ?>  
 </body>
 </html>

@@ -4,14 +4,14 @@
     <h2>Наша выпечка</h2>
     <div class="product-grid">
     <?php
-// Подключение к базе данных
+
 include 'db_config.php';
 
-// 1. Получение `category_id` из GET-параметра (для отображения товаров)
+
 $categoryId = isset($_GET['category_id']) ? intval($_GET['category_id']) : null;
 
-// 2. Получение информации о категории (если categoryId задан)
-$categoryName = null; // Инициализируем переменную
+
+$categoryName = null; 
 if ($categoryId !== null) {
     $sqlCategory = "SELECT name FROM categories WHERE id = ?";
     $stmtCategory = $conn->prepare($sqlCategory);
@@ -23,23 +23,23 @@ if ($categoryId !== null) {
         $categoryData = $resultCategory->fetch_assoc();
         $categoryName = $categoryData['name'];
     } else {
-        $categoryName = "Неизвестная категория"; // Или другое сообщение об ошибке
+        $categoryName = "Неизвестная категория"; 
     }
     $stmtCategory->close();
 }
 
-// 3. Отображение категорий (только если categoryId не задан)
+
 if ($categoryId === null) {
     $sqlCategories = "SELECT * FROM categories";
     $resultCategories = $conn->query($sqlCategories);
 
-    echo "<div class=\"categories-container\">"; // Контейнер для категорий
+    echo "<div class=\"categories-container\">"; 
 
     if ($resultCategories->num_rows > 0) {
         while ($category = $resultCategories->fetch_assoc()) {
-            echo "<a href=\"?category_id=" . htmlspecialchars($category['id']) . "\" class=\"category-link product-link\">"; // Оборачиваем в ссылку (как product-link)
-            echo "<div class=\"product category-product\">"; // Используем класс product, но добавляем класс category-product для стилизации
-            echo "<img src=\"" . htmlspecialchars($category["image"]) . "\" alt=\"" . htmlspecialchars($category["name"]) . "\">"; // Отображаем картинку категории
+            echo "<a href=\"?category_id=" . htmlspecialchars($category['id']) . "\" class=\"category-link product-link\">"; 
+            echo "<div class=\"product category-product\">"; 
+            echo "<img src=\"" . htmlspecialchars($category["image"]) . "\" alt=\"" . htmlspecialchars($category["name"]) . "\">"; 
             echo "<h3>" . htmlspecialchars($category["name"]) . "</h3>";
             echo "</div>";
             echo "</a>";
@@ -51,7 +51,7 @@ if ($categoryId === null) {
     echo "</div>";
 }
 
-// 4. Отображение товаров (если выбрана категория)
+
 if ($categoryId !== null) {
     echo "<h2 class=\"products-title\">Товары в категории:  " . htmlspecialchars($categoryName) . "</h2>"; // Отображаем название выбранной категории
     echo "<div class=\"products-container\">";

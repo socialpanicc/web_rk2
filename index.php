@@ -15,7 +15,7 @@
         <?php
         include 'db_config.php';
 
-        $sql = "SELECT * FROM products WHERE featured = 1 LIMIT 3"; // Только избранные товары
+        $sql = "SELECT * FROM products WHERE featured = 1 LIMIT 3";
         $result = $conn->query($sql);
    
 if ($result->num_rows > 0) {
@@ -27,7 +27,7 @@ if ($result->num_rows > 0) {
         echo "<p class=\"price\">Цена: " . htmlspecialchars($row["price"]) . " руб.</p>";
         echo "<p>" . htmlspecialchars($row["short_description"]) . "</p>";
         echo "</div>";
-        echo "</a>"; // Закрываем ссылку
+        echo "</a>"; 
     }
 } else {
     echo "<p>Избранных товаров не найдено.</p>";
